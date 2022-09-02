@@ -23,9 +23,8 @@ class PhotoRepository {
   Directory? _appDocsDir;
 
   Future<PhotoModel?> fetchAndCacheSinglePhotoFromNetwork(
-    String cacheID, {
-    bool deleteCurrentCache = false,
-  }) async {
+    String cacheName,
+  ) async {
     PhotoModel? newPhoto;
     final docPath = await _getAppDocsDir();
     http.Response response;
@@ -56,6 +55,24 @@ class PhotoRepository {
       throw PhotoRepositoryException('Network error');
     }
     return newPhoto;
+  }
+
+  // Future<void> addPhotoToPersistentCache(String cacheName, PhotoModel photo) async {}
+
+  Future<void> deletePhotoFromPersistentCache(String cacheName, PhotoModel photo) async {}
+
+  Future<void> moveCachedPhoto(String sourceCacheName, String destinationCacheName, PhotoModel photo) async {}
+
+  Future<void> deleteAllPhotosFromPersistentCache(String cacheName) async {}
+
+  Future<int> getPersistentCachePhotoCount(String cacheName) async {
+    return 0;
+  }
+
+  Future<List<PhotoModel>> getPhotosFromPersistentCache(String cacheName, int startingIndex, int maxCount) async {
+    final photos = <PhotoModel>[];
+
+    return photos;
   }
 
   Future<File> fileFromDocsDir(String filename) async {
