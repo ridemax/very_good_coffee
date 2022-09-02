@@ -1,0 +1,15 @@
+{
+    "@@locale": "es",
+    "veryGoodAppBarTitle": "Frijoles muy buenos",
+    "@veryGoodAppBarTitle": {
+        "description": "Texto que se muestra en la AppBar de la aplicación"
+    },
+    "navigationBarHomeLabel": "Barista",
+    "@navigationBarHomeLabel": {
+        "description": "Título de la barra de navegación para la pestaña de inicio"
+    },
+    "navigationBarFavoritesLabel": "Favoritos",
+    "@navigationBarFavoritesLabel": {
+        "description": "Título de la barra de navegación para la pestaña de favoritos"
+    }
+}

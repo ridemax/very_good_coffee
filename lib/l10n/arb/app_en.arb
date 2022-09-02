@@ -1,0 +1,18 @@
+{
+    "@@locale": "en",
+    "veryGoodAppBarTitle": "Very Good Beverages",
+    "@veryGoodAppBarTitle": {
+        "description": "Text shown in the AppBar of the app"
+    },
+    "navigationBarHomeLabel": "Barista",
+    "@navigationBarHomeLabel": {
+        "description": "Navigation bar title for home tab"
+    },
+    "baristaWelcome": "Welcome! I'm the Very Good Barista, serving images of your favorite brew!",
+    "@baristaWelcome": {
+        "description": "Welcome message from the barista"
+    },    "navigationBarFavoritesLabel": "Favorites",
+    "@navigationBarFavoritesLabel": {
+        "description": "Navigation bar title for favorites tab"
+    }
+}
