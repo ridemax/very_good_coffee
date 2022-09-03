@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -48,16 +50,32 @@ class PhotoRepository {
           url: newPhoto.remoteUrl,
           file: imageFile,
         );
-        // NEXT: Delete previously-cached image if deleteCurrentCache is true.
-        // Also replace contents of cached json with new image.
       }
     } else {
       throw PhotoRepositoryException('Network error');
     }
+    await _addPhotoToPersistentCache(cacheName, newPhoto);
     return newPhoto;
   }
 
-  // Future<void> addPhotoToPersistentCache(String cacheName, PhotoModel photo) async {}
+  Future<void> _addPhotoToPersistentCache(String cacheName, PhotoModel photo) async {
+    List<PhotoModel>? photoList;
+    final docPath = await _getAppDocsDir();
+    final cacheFile = File(path.join(docPath.path, '$cacheName.json'));
+
+    if (cacheFile.existsSync()) {
+      final contents = await cacheFile.readAsString();
+      // TODO: Handle possible exception from json parse errors
+      final rawList = jsonDecode(contents) as List<dynamic>;
+      // ignore: implicit_dynamic_parameter
+      photoList = rawList.map((e) => PhotoModel.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    photoList = photoList ?? <PhotoModel>[]
+      ..add(photo);
+
+    final updatedCache = json.encode(photoList.map((p) => p.toJson()).toList());
+    cacheFile.writeAsStringSync(updatedCache);
+  }
 
   Future<void> deletePhotoFromPersistentCache(String cacheName, PhotoModel photo) async {}
 
