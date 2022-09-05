@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:very_good_coffee/featured_image/cubit/featured_image_cubit.dart';
@@ -61,7 +59,7 @@ class FeaturedImageView extends StatelessWidget {
                 const SizedBox(height: 10),
                 Center(
                   child: state is FeaturedImageLoaded
-                      ? Image(image: state.photo.image!)
+                      ? Image.file(state.photo.image!)
                       : state is FeaturedImageLoading
                           ? const CircularProgressIndicator()
                           : const Center(child: Text('Error!')),

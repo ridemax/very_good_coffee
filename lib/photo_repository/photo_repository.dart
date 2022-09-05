@@ -5,13 +5,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:network_to_file_image/network_to_file_image.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:very_good_coffee/data_models/photo_model.dart';
 
 const String _photoDownloadURL = 'https://coffee.alexflipnote.dev/random.json';
-const String _favoritesFileName = 'favorites.json';
 
 class PhotoRepositoryException implements Exception {
   PhotoRepositoryException([this.message]);
@@ -45,11 +43,18 @@ class PhotoRepository {
 
       if (localFileName != null) {
         final localFileNameWithFullPath = path.join(docPath.path, localFileName);
-        final imageFile = File(localFileNameWithFullPath);
-        newPhoto.image = NetworkToFileImage(
-          url: newPhoto.remoteUrl,
-          file: imageFile,
-        );
+        http.Response photoResponse;
+
+        try {
+          photoResponse = await http.get(Uri.parse(newPhoto.remoteUrl!));
+        } catch (e) {
+          throw PhotoRepositoryException('Network error');
+        }
+        if (photoResponse.statusCode == 200) {
+          // TODO: Handle possible OOM exception as json error?
+          final imageFile = File(localFileNameWithFullPath);
+          newPhoto.image = await imageFile.writeAsBytes(photoResponse.bodyBytes);
+        }
       }
     } else {
       throw PhotoRepositoryException('Network error');
@@ -91,10 +96,7 @@ class PhotoRepository {
       photoList = rawList.map((e) => PhotoModel.fromJson(e as Map<String, dynamic>)).toList()
         ..forEach((photo) async {
           final localFileNameWithFullPath = path.join(docPath.path, photo.localFileName!);
-          photo.image = NetworkToFileImage(
-            url: photo.remoteUrl,
-            file: File(localFileNameWithFullPath),
-          );
+          photo.image = File(localFileNameWithFullPath);
         });
     }
 

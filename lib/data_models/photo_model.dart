@@ -1,17 +1,18 @@
-import 'package:network_to_file_image/network_to_file_image.dart';
+import 'dart:io';
+
 import 'package:path/path.dart' as p;
 
 class PhotoModel {
   PhotoModel(this.remoteUrl, {this.localFileName, this.image});
-  
+
   PhotoModel.fromJson(Map<String, dynamic> json) {
     remoteUrl = json['file'] as String?;
     localFileName = json['localFileName'] as String?;
   }
-    
+
   String? localFileName;
   String? remoteUrl;
-  NetworkToFileImage? image;
+  File? image;
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -25,11 +26,9 @@ class PhotoModel {
   String? get localFileNameResolved {
     if (localFileName != null) {
       return localFileName;
-    }
-    else if (remoteUrl == null) {
+    } else if (remoteUrl == null) {
       return null;
-    }
-    else {
+    } else {
       return localFileName = _idGenerator() + p.extension(remoteUrl!);
     }
   }
