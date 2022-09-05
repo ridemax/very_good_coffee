@@ -59,16 +59,42 @@ class FeaturedImageView extends StatelessWidget {
                 const SizedBox(height: 10),
                 Center(
                   child: state is FeaturedImageLoaded
-                      ? Image.file(state.photo.image!)
+                      ? _featuredImage(context, state)
                       : state is FeaturedImageLoading
                           ? const CircularProgressIndicator()
-                          : const Center(child: Text('Error!')),
+                          : const SizedBox(height: 20),
                 ),
               ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _featuredImage(BuildContext context, FeaturedImageLoaded state) {
+    return Column(
+      children: [
+        Image.file(state.photo.image!),
+        Container(
+          color: Theme.of(context).primaryColorDark,
+          height: 60,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (state.isFavorite)
+                const Text('Added to favorites!')
+              else
+                IconButton(
+                  iconSize: 44,
+                  icon: const Icon(Icons.favorite_outline),
+                  onPressed: () => context.read<FeaturedImageCubit>().markImageAsFavorite(),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

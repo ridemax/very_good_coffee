@@ -22,9 +22,7 @@ class PhotoRepository {
 
   Directory? _appDocsDir;
 
-  Future<PhotoModel?> fetchAndCacheSinglePhotoFromNetwork(
-    String cacheName,
-  ) async {
+  Future<PhotoModel?> fetchAndCacheSinglePhotoFromNetwork(String cacheName, {bool replaceCacheContents = false}) async {
     PhotoModel? newPhoto;
     final docPath = await _getAppDocsDir();
     http.Response response;
@@ -57,7 +55,10 @@ class PhotoRepository {
         }
       }
     } else {
-      throw PhotoRepositoryException('Network error');
+      throw PhotoRepositoryException('Repository: network error');
+    }
+    if (replaceCacheContents) {
+      await deleteAllPhotosFromPersistentCache(cacheName);
     }
     await _addPhotoToPersistentCache(cacheName, newPhoto);
     return newPhoto;
@@ -74,9 +75,41 @@ class PhotoRepository {
 
   Future<void> deletePhotoFromPersistentCache(String cacheName, PhotoModel photo) async {}
 
-  Future<void> moveCachedPhoto(String sourceCacheName, String destinationCacheName, PhotoModel photo) async {}
+  Future<void> moveCachedPhoto(String sourceCacheName, String destinationCacheName, PhotoModel photo) async {
+    try {
+      final sourceList = await getPhotosFromPersistentCache(sourceCacheName);
+      final destinationList = await getPhotosFromPersistentCache(destinationCacheName);
 
-  Future<void> deleteAllPhotosFromPersistentCache(String cacheName) async {}
+      sourceList.removeWhere((element) => element.localFileName == photo.localFileName);
+      destinationList.insert(0, photo);
+
+      var cacheFile = await _fileFromDocsDir('$sourceCacheName.json');
+      var updatedCache = json.encode(sourceList.map((p) => p.toJson()).toList());
+      cacheFile.writeAsStringSync(updatedCache);
+
+      cacheFile = await _fileFromDocsDir('$destinationCacheName.json');
+      updatedCache = json.encode(destinationList.map((p) => p.toJson()).toList());
+      cacheFile.writeAsStringSync(updatedCache);
+    } catch (_) {
+      throw PhotoRepositoryException('Repository: json parse error');
+    }
+  }
+
+  Future<void> deleteAllPhotosFromPersistentCache(String cacheName) async {
+    for (final photo in await getPhotosFromPersistentCache(cacheName)) {
+      try {
+        final photoFile = await _fileFromDocsDir(photo.localFileName!);
+        await photoFile.delete();
+      } catch (_) {} // We're going to ignore any exceptions when attempting to delete individual photo files,
+      // since there isn't anything useful the user could do in this case anyway
+      // TODO: Handle this case in Cubit to make this more explicit and not buried down here in the repository
+    }
+
+    final cacheFile = await _fileFromDocsDir('$cacheName.json');
+    if (cacheFile.existsSync()) {
+      cacheFile.deleteSync();
+    }
+  }
 
   Future<int> getPersistentCachePhotoCount(String cacheName) async {
     return 0;

@@ -1,14 +1,16 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:very_good_coffee/data_models/photo_model.dart';
+import 'package:very_good_coffee/favorite_images/cubit/favorite_images_cubit.dart';
 import 'package:very_good_coffee/photo_repository/photo_repository.dart';
 
 part 'featured_image_state.dart';
 
 class FeaturedImageCubit extends Cubit<FeaturedImageState> {
-  FeaturedImageCubit(this._photoRepository) : super(FeaturedImageInitial());
+  FeaturedImageCubit(this._photoRepository, this._favoriteImagesCubit) : super(FeaturedImageInitial());
 
   final PhotoRepository _photoRepository;
+  final FavoriteImagesCubit _favoriteImagesCubit;
   PhotoModel? featuredPhoto;
   bool isFavorite = false;
 
@@ -18,14 +20,35 @@ class FeaturedImageCubit extends Cubit<FeaturedImageState> {
     try {
       final newPhoto = await _photoRepository.fetchAndCacheSinglePhotoFromNetwork('featuredImage');
       featuredPhoto = newPhoto ?? featuredPhoto;
+      isFavorite = false;
 
       if (featuredPhoto != null) {
-        emit(FeaturedImageLoaded(featuredPhoto!));
+        emit(FeaturedImageLoaded(featuredPhoto!, isFavorite: isFavorite));
       } else {
         emit(NetworkError());
       }
     } catch (_) {
       emit(NetworkError());
     }
+  }
+
+  Future<void> markImageAsFavorite() async {
+    try {
+      await _photoRepository.moveCachedPhoto(
+        'featuredImage',
+        'favoriteImages',
+        featuredPhoto!,
+      );
+
+      if (featuredPhoto != null) {
+        isFavorite = true;
+        emit(FeaturedImageLoaded(featuredPhoto!, isFavorite: isFavorite));
+      } else {
+        emit(NetworkError());
+      }
+    } catch (_) {
+      emit(NetworkError());
+    }
+    await _favoriteImagesCubit.loadFavorites();
   }
 }

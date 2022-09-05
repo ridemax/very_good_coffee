@@ -5,6 +5,8 @@ abstract class FavoriteImagesState {}
 
 class FavoriteImagesInitial extends FavoriteImagesState {}
 
+class FavoriteImagesRefreshing extends FavoriteImagesState {}
+
 class FavoriteImagesLoaded extends FavoriteImagesState {
   FavoriteImagesLoaded(
     this.photos,

@@ -60,12 +60,16 @@ class App extends StatelessWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       home: MultiBlocProvider(
         providers: [
-          BlocProvider<FeaturedImageCubit>(
-            create: (BuildContext context) => FeaturedImageCubit(_photoRepository),
-          ),
           BlocProvider<FavoriteImagesCubit>(
+            lazy: false,
             create: (BuildContext context) => FavoriteImagesCubit(_photoRepository),
-          )
+          ),
+          BlocProvider<FeaturedImageCubit>(
+            create: (BuildContext context) => FeaturedImageCubit(
+              _photoRepository,
+              BlocProvider.of<FavoriteImagesCubit>(context),
+            ),
+          ),
         ],
         child: const MainNavigationPage(),
       ),

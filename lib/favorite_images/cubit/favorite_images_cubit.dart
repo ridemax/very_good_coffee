@@ -12,7 +12,7 @@ class FavoriteImagesCubit extends Cubit<FavoriteImagesState> {
 
   Future<void> loadFavorites() async {
     try {
-      emit(FavoriteImagesLoaded(await _photoRepository.getPhotosFromPersistentCache('featuredImage'))); // For quick test with featuredImage cache
+      emit(FavoriteImagesLoaded(await _photoRepository.getPhotosFromPersistentCache('favoriteImages')));
     } catch (_) {
       emit(FavoriteImagesJsonParseError());
     }
