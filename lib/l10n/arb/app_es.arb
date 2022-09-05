@@ -1,6 +1,6 @@
 {
     "@@locale": "es",
-    "veryGoodAppBarTitle": "Frijoles muy buenos",
+    "veryGoodAppBarTitle": "Muy Buen Cafe",
     "@veryGoodAppBarTitle": {
         "description": "Texto que se muestra en la AppBar de la aplicación"
     },

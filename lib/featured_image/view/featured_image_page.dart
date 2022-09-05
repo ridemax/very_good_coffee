@@ -12,6 +12,8 @@ class FeaturedImageView extends StatelessWidget {
     return SingleChildScrollView(
       child: BlocBuilder<FeaturedImageCubit, FeaturedImageState>(
         builder: (context, state) {
+          var prompt = l10n.buttonServeNewImage;
+          if (state is NetworkImageLoadException) prompt = l10n.tryAgain;
           return Padding(
             padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
             child: Column(
@@ -52,17 +54,23 @@ class FeaturedImageView extends StatelessWidget {
                 const SizedBox(height: 10),
                 Center(
                   child: ElevatedButton(
-                    onPressed: () => context.read<FeaturedImageCubit>().loadNewImage(),
-                    child: const Text('Show me the java!'),
+                    onPressed: () {
+                      if (state is! FeaturedImageLoading) {
+                        context.read<FeaturedImageCubit>().loadNewImage();
+                      }
+                    },
+                    child: Text(prompt),
                   ),
                 ),
                 const SizedBox(height: 10),
                 Center(
                   child: state is FeaturedImageLoaded
-                      ? _featuredImage(context, state)
+                      ? _featuredImage(context, state, l10n)
                       : state is FeaturedImageLoading
                           ? const CircularProgressIndicator()
-                          : const SizedBox(height: 20),
+                          : state is NetworkError
+                              ? Text(l10n.networkOffline)
+                              : const SizedBox(height: 20),
                 ),
               ],
             ),
@@ -72,7 +80,7 @@ class FeaturedImageView extends StatelessWidget {
     );
   }
 
-  Widget _featuredImage(BuildContext context, FeaturedImageLoaded state) {
+  Widget _featuredImage(BuildContext context, FeaturedImageLoaded state, AppLocalizations l10n) {
     return Column(
       children: [
         Image.file(state.photo.image!),
@@ -80,15 +88,14 @@ class FeaturedImageView extends StatelessWidget {
           color: Theme.of(context).primaryColorDark,
           height: 60,
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (state.isFavorite)
-                const Text('Added to favorites!')
+                Text(l10n.addedToFavorites, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 20))
               else
                 IconButton(
                   iconSize: 44,
-                  icon: const Icon(Icons.favorite_outline),
+                  icon: Icon(Icons.favorite_outline, color: Theme.of(context).focusColor),
                   onPressed: () => context.read<FeaturedImageCubit>().markImageAsFavorite(),
                 ),
             ],

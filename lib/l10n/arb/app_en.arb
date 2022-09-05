@@ -1,6 +1,6 @@
 {
     "@@locale": "en",
-    "veryGoodAppBarTitle": "Very Good Beverages",
+    "veryGoodAppBarTitle": "Very Good Coffee",
     "@veryGoodAppBarTitle": {
         "description": "Text shown in the AppBar of the app"
     },
@@ -11,8 +11,25 @@
     "baristaWelcome": "Welcome! I'm the Very Good Barista, serving images of your favorite brew!",
     "@baristaWelcome": {
         "description": "Welcome message from the barista"
-    },    "navigationBarFavoritesLabel": "Favorites",
+    },
+    "navigationBarFavoritesLabel": "Favorites",
     "@navigationBarFavoritesLabel": {
         "description": "Navigation bar title for favorites tab"
+    },
+    "buttonServeNewImage": "Serve me a fresh image!",
+    "@buttonServeNewImage": {
+        "description": "Button label for serving a new image"
+    },
+    "tryAgain": "Try again",
+    "@tryAgain": {
+        "description": "Button label to try loading image again after network offline"
+    },
+    "networkOffline": "Device is offline",
+    "@networkOffline": {
+        "description": "Network offline status message"
+    },
+    "addedToFavorites": "Added to favorites!",
+    "@addedToFavorites": {
+        "description": "Added to favorites status message"
     }
 }
