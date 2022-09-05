@@ -59,21 +59,11 @@ class PhotoRepository {
   }
 
   Future<void> _addPhotoToPersistentCache(String cacheName, PhotoModel photo) async {
-    List<PhotoModel>? photoList;
-    final docPath = await _getAppDocsDir();
-    final cacheFile = File(path.join(docPath.path, '$cacheName.json'));
-
-    if (cacheFile.existsSync()) {
-      final contents = await cacheFile.readAsString();
-      // TODO: Handle possible exception from json parse errors
-      final rawList = jsonDecode(contents) as List<dynamic>;
-      // ignore: implicit_dynamic_parameter
-      photoList = rawList.map((e) => PhotoModel.fromJson(e as Map<String, dynamic>)).toList();
-    }
-    photoList = photoList ?? <PhotoModel>[]
-      ..add(photo);
+    final photoList = await getPhotosFromPersistentCache(cacheName)
+      ..insert(0, photo);
 
     final updatedCache = json.encode(photoList.map((p) => p.toJson()).toList());
+    final cacheFile = await _fileFromDocsDir('$cacheName.json');
     cacheFile.writeAsStringSync(updatedCache);
   }
 
@@ -87,13 +77,31 @@ class PhotoRepository {
     return 0;
   }
 
-  Future<List<PhotoModel>> getPhotosFromPersistentCache(String cacheName, int startingIndex, int maxCount) async {
-    final photos = <PhotoModel>[];
+  Future<List<PhotoModel>> getPhotosFromPersistentCache(String cacheName) async {
+    List<PhotoModel>? photoList;
 
-    return photos;
+    final cacheFile = await _fileFromDocsDir('$cacheName.json');
+
+    if (cacheFile.existsSync()) {
+      final contents = await cacheFile.readAsString();
+      // TODO: Handle possible exception from json parse errors
+      final rawList = await jsonDecode(contents) as List<dynamic>;
+      final docPath = await _getAppDocsDir();
+      // ignore: implicit_dynamic_parameter
+      photoList = rawList.map((e) => PhotoModel.fromJson(e as Map<String, dynamic>)).toList()
+        ..forEach((photo) async {
+          final localFileNameWithFullPath = path.join(docPath.path, photo.localFileName!);
+          photo.image = NetworkToFileImage(
+            url: photo.remoteUrl,
+            file: File(localFileNameWithFullPath),
+          );
+        });
+    }
+
+    return photoList ?? <PhotoModel>[];
   }
 
-  Future<File> fileFromDocsDir(String filename) async {
+  Future<File> _fileFromDocsDir(String filename) async {
     final dir = await _getAppDocsDir();
     final pathName = path.join(dir.path, filename);
     return File(pathName);

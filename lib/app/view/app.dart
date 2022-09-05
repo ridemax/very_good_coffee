@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:very_good_coffee/favorite_images/cubit/favorite_images_cubit.dart';
 import 'package:very_good_coffee/featured_image/cubit/featured_image_cubit.dart';
 import 'package:very_good_coffee/l10n/l10n.dart';
 import 'package:very_good_coffee/main_navigation/main_navigation.dart';
@@ -20,6 +21,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _photoRepository = PhotoRepository();
     return MaterialApp(
       theme: FlexThemeData.light(
         scheme: FlexScheme.espresso,
@@ -59,8 +61,11 @@ class App extends StatelessWidget {
       home: MultiBlocProvider(
         providers: [
           BlocProvider<FeaturedImageCubit>(
-          create: (BuildContext context) =>
-            FeaturedImageCubit(PhotoRepository()),)
+            create: (BuildContext context) => FeaturedImageCubit(_photoRepository),
+          ),
+          BlocProvider<FavoriteImagesCubit>(
+            create: (BuildContext context) => FavoriteImagesCubit(_photoRepository),
+          )
         ],
         child: const MainNavigationPage(),
       ),
