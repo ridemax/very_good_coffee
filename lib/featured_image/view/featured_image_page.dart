@@ -91,11 +91,11 @@ class FeaturedImageView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (state.isFavorite)
-                Text(l10n.addedToFavorites, style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 20))
+                Text(l10n.addedToFavorites, style: TextStyle(fontSize: 20, color: Theme.of(context).primaryColorLight))
               else
                 IconButton(
                   iconSize: 44,
-                  icon: Icon(Icons.favorite_outline, color: Theme.of(context).focusColor),
+                  icon: Icon(Icons.favorite_outline, color: Theme.of(context).primaryColorLight),
                   onPressed: () => context.read<FeaturedImageCubit>().markImageAsFavorite(),
                 ),
             ],
