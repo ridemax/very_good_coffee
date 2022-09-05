@@ -17,7 +17,7 @@ class FavoriteImagesView extends StatelessWidget {
           itemCount: count,
           separatorBuilder: (BuildContext context, int index) => const Divider(),
           itemBuilder: (BuildContext context, int index) {
-            return Image.file(state.photos[index].image!);
+            return Image.file(key: Key(state.photos[index].localFileName!), state.photos[index].image!);
           },
         );
       } else {
