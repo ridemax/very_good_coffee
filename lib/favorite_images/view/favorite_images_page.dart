@@ -11,13 +11,14 @@ class FavoriteImagesView extends StatelessWidget {
     final l10n = context.l10n;
     return BlocBuilder<FavoriteImagesCubit, FavoriteImagesState>(builder: (context, state) {
       if (state is FavoriteImagesLoaded) {
+        final photoRepository = context.read<FavoriteImagesCubit>().photoRepository;
         final images = state.photos;
         final count = images.length;
         return ListView.separated(
           itemCount: count,
           separatorBuilder: (BuildContext context, int index) => const Divider(),
           itemBuilder: (BuildContext context, int index) {
-            return Image.file(key: Key(state.photos[index].localFileName!), state.photos[index].image!);
+            return photoRepository.getImageFromPhoto(state.photos[index]);
           },
         );
       } else {

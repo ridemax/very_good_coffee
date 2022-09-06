@@ -81,9 +81,10 @@ class FeaturedImageView extends StatelessWidget {
   }
 
   Widget _featuredImage(BuildContext context, FeaturedImageLoaded state, AppLocalizations l10n) {
+    final photoRepository = context.read<FeaturedImageCubit>().photoRepository;
     return Column(
       children: [
-        Image.file(state.photo.image!),
+        photoRepository.getImageFromPhoto(state.photo),
         Container(
           color: Theme.of(context).primaryColorDark,
           height: 60,

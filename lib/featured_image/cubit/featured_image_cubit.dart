@@ -7,9 +7,9 @@ import 'package:very_good_coffee/photo_repository/photo_repository.dart';
 part 'featured_image_state.dart';
 
 class FeaturedImageCubit extends Cubit<FeaturedImageState> {
-  FeaturedImageCubit(this._photoRepository, this._favoriteImagesCubit) : super(FeaturedImageInitial());
+  FeaturedImageCubit(this.photoRepository, this._favoriteImagesCubit) : super(FeaturedImageInitial());
 
-  final PhotoRepository _photoRepository;
+  final PhotoRepository photoRepository;
   final FavoriteImagesCubit _favoriteImagesCubit;
   PhotoModel? featuredPhoto;
   bool isFavorite = false;
@@ -18,7 +18,7 @@ class FeaturedImageCubit extends Cubit<FeaturedImageState> {
     emit(FeaturedImageLoading());
 
     try {
-      final newPhoto = await _photoRepository.fetchAndCacheSinglePhotoFromNetwork('featuredImage');
+      final newPhoto = await photoRepository.fetchAndCacheSinglePhotoFromNetwork('featuredImage');
       featuredPhoto = newPhoto ?? featuredPhoto;
       isFavorite = false;
 
@@ -34,7 +34,7 @@ class FeaturedImageCubit extends Cubit<FeaturedImageState> {
 
   Future<void> markImageAsFavorite() async {
     try {
-      await _photoRepository.moveCachedPhoto(
+      await photoRepository.moveCachedPhoto(
         'featuredImage',
         'favoriteImages',
         featuredPhoto!,

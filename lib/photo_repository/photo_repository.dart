@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -73,7 +74,9 @@ class PhotoRepository {
     cacheFile.writeAsStringSync(updatedCache);
   }
 
-  Future<void> deletePhotoFromPersistentCache(String cacheName, PhotoModel photo) async {}
+  Image getImageFromPhoto(PhotoModel photoModel) {
+    return Image.file(key: Key(photoModel.localFileName!), photoModel.image!);
+  }
 
   Future<void> moveCachedPhoto(String sourceCacheName, String destinationCacheName, PhotoModel photo) async {
     try {
@@ -109,10 +112,6 @@ class PhotoRepository {
     if (cacheFile.existsSync()) {
       cacheFile.deleteSync();
     }
-  }
-
-  Future<int> getPersistentCachePhotoCount(String cacheName) async {
-    return 0;
   }
 
   Future<List<PhotoModel>> getPhotosFromPersistentCache(String cacheName) async {
