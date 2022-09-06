@@ -2,7 +2,7 @@
 
 [![License: MIT][license_badge]][license_link]
 
-Created on the Very Good Core using the [Very Good CLI][very_good_cli_link] 🤖
+Created by Mark Winters on the Very Good Core using the [Very Good CLI][very_good_cli_link] 🤖
 
 ---
 
