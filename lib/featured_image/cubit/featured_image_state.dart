@@ -17,4 +17,4 @@ class FeaturedImageLoaded extends FeaturedImageState {
   final bool isFavorite;
 }
 
-class NetworkError extends FeaturedImageState {}
+class FeaturedImageNetworkError extends FeaturedImageState {}

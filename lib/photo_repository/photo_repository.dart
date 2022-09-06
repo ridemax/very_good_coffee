@@ -12,11 +12,13 @@ import 'package:very_good_coffee/data_models/photo_model.dart';
 
 const String _photoDownloadURL = 'https://coffee.alexflipnote.dev/random.json';
 
-class PhotoRepositoryException implements Exception {
-  PhotoRepositoryException([this.message]);
+class PhotoRepositoryException implements Exception {}
 
-  String? message;
-}
+class PhotoRepositoryJsonParseException extends PhotoRepositoryException {}
+
+class PhotoRepositoryNetworkException extends PhotoRepositoryException {}
+
+class PhotoRepositoryFileWriteException extends PhotoRepositoryException {}
 
 class PhotoRepository {
   PhotoRepository();
@@ -30,14 +32,17 @@ class PhotoRepository {
 
     try {
       response = await http.get(Uri.parse(_photoDownloadURL));
-    } catch (e) {
-      throw PhotoRepositoryException('Network error');
+    } catch (_) {
+      throw PhotoRepositoryNetworkException();
     }
     // Download the new photo and save it in local storage
-    // TODO: Handle possible exception from json parse error
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body) as Map<String, dynamic>;
-      newPhoto = PhotoModel.fromJson(data);
+      try {
+        final data = jsonDecode(response.body) as Map<String, dynamic>;
+        newPhoto = PhotoModel.fromJson(data);
+      } catch (_) {
+        throw PhotoRepositoryJsonParseException();
+      }
       final localFileName = newPhoto.localFileNameResolved;
 
       if (localFileName != null) {
@@ -47,16 +52,19 @@ class PhotoRepository {
         try {
           photoResponse = await http.get(Uri.parse(newPhoto.remoteUrl!));
         } catch (e) {
-          throw PhotoRepositoryException('Network error');
+          throw PhotoRepositoryNetworkException();
         }
         if (photoResponse.statusCode == 200) {
-          // TODO: Handle possible OOM exception as json error?
-          final imageFile = File(localFileNameWithFullPath);
-          newPhoto.image = await imageFile.writeAsBytes(photoResponse.bodyBytes);
+          try {
+            final imageFile = File(localFileNameWithFullPath);
+            newPhoto.image = await imageFile.writeAsBytes(photoResponse.bodyBytes);
+          } catch (_) {
+            throw PhotoRepositoryFileWriteException();
+          }
         }
       }
     } else {
-      throw PhotoRepositoryException('Repository: network error');
+      throw PhotoRepositoryNetworkException();
     }
     if (replaceCacheContents) {
       await deleteAllPhotosFromPersistentCache(cacheName);
@@ -94,7 +102,7 @@ class PhotoRepository {
       updatedCache = json.encode(destinationList.map((p) => p.toJson()).toList());
       cacheFile.writeAsStringSync(updatedCache);
     } catch (_) {
-      throw PhotoRepositoryException('Repository: json parse error');
+      throw PhotoRepositoryJsonParseException();
     }
   }
 
@@ -105,7 +113,6 @@ class PhotoRepository {
         await photoFile.delete();
       } catch (_) {} // We're going to ignore any exceptions when attempting to delete individual photo files,
       // since there isn't anything useful the user could do in this case anyway
-      // TODO: Handle this case in Cubit to make this more explicit and not buried down here in the repository
     }
 
     final cacheFile = await _fileFromDocsDir('$cacheName.json');
@@ -120,16 +127,19 @@ class PhotoRepository {
     final cacheFile = await _fileFromDocsDir('$cacheName.json');
 
     if (cacheFile.existsSync()) {
-      final contents = await cacheFile.readAsString();
-      // TODO: Handle possible exception from json parse errors
-      final rawList = await jsonDecode(contents) as List<dynamic>;
-      final docPath = await _getAppDocsDir();
-      // ignore: implicit_dynamic_parameter
-      photoList = rawList.map((e) => PhotoModel.fromJson(e as Map<String, dynamic>)).toList()
-        ..forEach((photo) async {
-          final localFileNameWithFullPath = path.join(docPath.path, photo.localFileName!);
-          photo.image = File(localFileNameWithFullPath);
-        });
+      try {
+        final contents = await cacheFile.readAsString();
+        final rawList = await jsonDecode(contents) as List<dynamic>;
+        final docPath = await _getAppDocsDir();
+        // ignore: implicit_dynamic_parameter
+        photoList = rawList.map((e) => PhotoModel.fromJson(e as Map<String, dynamic>)).toList()
+          ..forEach((photo) async {
+            final localFileNameWithFullPath = path.join(docPath.path, photo.localFileName!);
+            photo.image = File(localFileNameWithFullPath);
+          });
+      } catch (_) {
+        throw PhotoRepositoryJsonParseException();
+      }
     }
 
     return photoList ?? <PhotoModel>[];

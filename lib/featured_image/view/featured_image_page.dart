@@ -13,7 +13,7 @@ class FeaturedImageView extends StatelessWidget {
       child: BlocBuilder<FeaturedImageCubit, FeaturedImageState>(
         builder: (context, state) {
           var prompt = l10n.buttonServeNewImage;
-          if (state is NetworkError) prompt = l10n.tryAgain;
+          if (state is FeaturedImageNetworkError) prompt = l10n.tryAgain;
           return Padding(
             padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
             child: Column(
@@ -68,7 +68,7 @@ class FeaturedImageView extends StatelessWidget {
                       ? _featuredImage(context, state, l10n)
                       : state is FeaturedImageLoading
                           ? const CircularProgressIndicator()
-                          : state is NetworkError
+                          : state is FeaturedImageNetworkError
                               ? Text(l10n.networkOffline)
                               : const SizedBox(height: 20),
                 ),

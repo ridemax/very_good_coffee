@@ -25,10 +25,10 @@ class FeaturedImageCubit extends Cubit<FeaturedImageState> {
       if (featuredPhoto != null) {
         emit(FeaturedImageLoaded(featuredPhoto!, isFavorite: isFavorite));
       } else {
-        emit(NetworkError());
+        emit(FeaturedImageNetworkError());
       }
     } catch (_) {
-      emit(NetworkError());
+      emit(FeaturedImageNetworkError());
     }
   }
 
@@ -44,10 +44,10 @@ class FeaturedImageCubit extends Cubit<FeaturedImageState> {
         isFavorite = true;
         emit(FeaturedImageLoaded(featuredPhoto!, isFavorite: isFavorite));
       } else {
-        emit(NetworkError());
+        emit(FeaturedImageNetworkError());
       }
     } catch (_) {
-      emit(NetworkError());
+      emit(FeaturedImageNetworkError());
     }
     await _favoriteImagesCubit.loadFavorites();
   }
