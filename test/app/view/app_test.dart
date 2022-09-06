@@ -7,13 +7,13 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:very_good_coffee/app/app.dart';
-import 'package:very_good_coffee/counter/counter.dart';
+import 'package:very_good_coffee/main_navigation/main_navigation.dart';
 
 void main() {
   group('App', () {
-    testWidgets('renders CounterPage', (tester) async {
+    testWidgets('renders MainNavigation page', (tester) async {
       await tester.pumpWidget(const App());
-      expect(find.byType(CounterPage), findsOneWidget);
+      expect(find.byType(MainNavigationPage), findsOneWidget);
     });
   });
 }
