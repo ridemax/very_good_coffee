@@ -131,6 +131,10 @@ Update the `CFBundleLocalizations` array in the `Info.plist` at `ios/Runner/Info
     }
 }
 ```
+### Product Roadmap
+
+The app allows the user to save favorite images to local storage for review later, but doesn't offer a way
+to delete them currently. This is high priority for a future release :-)
 
 [flutter_localizations_link]: https://api.flutter.dev/flutter/flutter_localizations/flutter_localizations-library.html
 [internationalization_link]: https://flutter.dev/docs/development/accessibility-and-localization/internationalization
