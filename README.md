@@ -1,6 +1,5 @@
 # Very Good Coffee
 
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 
 Created on the Very Good Core using the [Very Good CLI][very_good_cli_link] 🤖
@@ -30,7 +29,7 @@ $ flutter run --flavor staging --target lib/main_staging.dart
 $ flutter run --flavor production --target lib/main_production.dart
 ```
 
-_\*Very Good Coffee works on iOS, Android, Web, and Windows._
+_\*Very Good Coffee works on iOS and Android._
 
 ---
 
