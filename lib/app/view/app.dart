@@ -23,6 +23,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     final _photoRepository = PhotoRepository();
     return MaterialApp(
+      // Theme code block below is courtesy of FlexColorScheme
       theme: FlexThemeData.light(
         scheme: FlexScheme.espresso,
         surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
