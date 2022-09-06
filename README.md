@@ -15,11 +15,13 @@ This app allows a user to do the following:
 - Download images of coffee
 - Store favorite images to local storage for later review
 
-## Project goals
+## Project Goals
 
 In addition to filling the basic product requirements listed above, I also had learning goals which mostly focused around using the Very Good Core as a starter template for the app. I found this to be a very solid foundation to build from.
 
-I also used this exercise as an opportunity to try out the [flex_color_scheme package][flex_color_scheme_link] by Mike Rydstrom. I found the "Espresso and crema" theme especially appropriate for this app :blush:
+I also used this exercise as an opportunity to try out the [flex_color_scheme] package[flex_color_scheme_link] by Mike Rydstrom. I found the "Espresso and crema" theme especially appropriate for this app :blush:
+
+A big shout out goes to OpenAI's [DALL-E 2][dall_e_2_link] for creating the barista image shown above and used in the app.
 
 ## Getting Started 🚀
 
@@ -163,3 +165,4 @@ to delete them currently. This is high priority for a future release :blush:
 [license_link]: https://opensource.org/licenses/MIT
 [very_good_cli_link]: https://github.com/VeryGoodOpenSource/very_good_cli
 [flex_color_scheme_link]: https://pub.dev/packages/flex_color_scheme
+[dall_e_2_link]: https://labs.openai.com/
