@@ -30,23 +30,24 @@ class MainNavigationView extends StatelessWidget {
         title: Text(l10n.veryGoodAppBarTitle),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.coffee_rounded),
-              label: l10n.navigationBarHomeLabel,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.favorite),
-              label: l10n.navigationBarFavoritesLabel,
-            ),
-          ],
-          currentIndex: currentIndex,
-          onTap: (int newTabIndex) {
-            context.read<MainNavigationCubit>().setCurrentTabIndex(newTabIndex);
-            if (newTabIndex == 1) {
-              context.read<FavoriteImagesCubit>().loadFavorites();
-            }
-          }),
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.coffee_rounded),
+            label: l10n.navigationBarHomeLabel,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.favorite),
+            label: l10n.navigationBarFavoritesLabel,
+          ),
+        ],
+        currentIndex: currentIndex,
+        onTap: (int newTabIndex) {
+          context.read<MainNavigationCubit>().setCurrentTabIndex(newTabIndex);
+          if (newTabIndex == 1) {
+            context.read<FavoriteImagesCubit>().loadFavorites();
+          }
+        },
+      ),
       body: currentIndex == 0 ? const FeaturedImageView() : const FavoriteImagesView(),
     );
   }

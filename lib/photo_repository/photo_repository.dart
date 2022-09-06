@@ -137,6 +137,7 @@ class PhotoRepository {
         // ignore: implicit_dynamic_parameter
         photoList = rawList.map((e) => PhotoModel.fromJson(e as Map<String, dynamic>)).toList()
           ..forEach((photo) async {
+            // ignore: unnecessary_null_checks
             final localFileNameWithFullPath = path.join(docPath.path, photo.localFileName!);
             photo.image = File(localFileNameWithFullPath);
           });
