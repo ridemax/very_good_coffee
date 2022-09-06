@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:very_good_coffee/data_models/photo_model.dart';
@@ -29,6 +30,8 @@ class PhotoRepository {
     PhotoModel? newPhoto;
     final docPath = await _getAppDocsDir();
     http.Response response;
+
+    if (!await InternetConnectionChecker().hasConnection) throw PhotoRepositoryNetworkException();
 
     try {
       response = await http.get(Uri.parse(_photoDownloadURL));
