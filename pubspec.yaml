@@ -18,7 +18,6 @@ dependencies:
   google_fonts: ^3.0.1
   http: ^0.13.5
   intl: ^0.17.0
-  network_to_file_image: ^4.0.1
   path_provider: ^2.0.11
 
 dev_dependencies:
